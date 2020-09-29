@@ -1,10 +1,40 @@
+html {
+  --bg: #14181E;
+  --prim: #CC4B0B;
+  --sec: #A08669;
+  --third: #274E4D;
+  --fourth: #E7CE73;
+}
+
 body {
   font-family: "Amatic SC", cursive;
   font-weight: 700;
+  background-color: var(--bg);
+  color: white;
+}
+
+.color-prim {
+  color: var(--prim);
 }
 
 .navbar {
   margin-bottom: 20px;
+  background-color: var(--bg);
+}
+
+.active {
+  color: var(--prim);
+}
+
+@media (min-width: 800px) {
+  .form {
+    width: 20%;
+    left: 40%;
+    position: absolute;
+  }
+}
+.btn-form {
+  margin-bottom: 10px;
 }
 
 /*# sourceMappingURL=main.css.map */
