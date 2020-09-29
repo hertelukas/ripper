@@ -11,8 +11,11 @@ Ripper is an online multiplayer social deduction game. The current status of dev
  
  ### Configuration
 To configure variables add a `.env` file.
-| Name     | Default                    | Description                                                                       |
-|----------|----------------------------|-----------------------------------------------------------------------------------|
-| NODE_ENV | -                          | Lets you change between different environments. (Ex. `DEVELOPMENT`, `PRODUCTION`) |
-| PORT     | `3000`                     | Port the node application is running.                                             |
-| SECRET   | `Gzuz mir gehts gut jetzt` | Express-Session password. Should be changed!                                      |
+| Name       | Default                    | Description                                                                                            |
+|------------|----------------------------|--------------------------------------------------------------------------------------------------------|
+| NODE_ENV   | -                          | Lets you change between different environments. (Ex. `DEVELOPMENT`, `PRODUCTION`)                      |
+| PORT       | `3000`                     | Port the node application is running.                                                                  |
+| SECRET     | `Gzuz mir gehts gut jetzt` | Express-Session password. Should be changed!                                                           |
+| MAX_GAMES  | `10`                       | The max number of games being played simultanously.                                                    |
+| MAX_PLAYER | `6`                        | Max players in one game. Be careful when changing this.  (This can result in a worse game experience.) |
+| ID_LENGTH  | `3`                        | The length of the id. If you host a lot of games, you may want to increase this number.                |
