@@ -1,6 +1,6 @@
 # Ripper
 
-Ripper is an online multiplayer social deduction game. 
+Ripper is an online multiplayer social deduction game. The current status of development can be seen [here](https://ripperitin.herokuapp.com/)
 
 ## Installation
 
