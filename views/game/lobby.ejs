@@ -3,9 +3,32 @@
 <div class="container">
     <div class="text-center">
         <h1 class="display-1 color-prim"><%=id%></h1>
-        <hr>    
+        <hr>
+
+        <div class="chat">
+            <form class="form-inline" id="send">
+                <div class="form-group mx-sm-3 mb-2">
+                  <input type="text" class="form-control" id="Message" placeholder="Type a message">
+                </div>
+                <button type="submit" class="btn btn-outline-light mb-2">Send</button>
+              </form>
+        </div>
     </div>
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+
+  $(function () {
+    $('#send').submit(function(e) {
+      e.preventDefault(); 
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
+  });
+</script>
 
 
 <%- include("../partials/footer") %>

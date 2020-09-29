@@ -1,10 +1,10 @@
 const express       = require("express"),
       app           = express(),
-      server        = require('http').createServer(app),
-      io            = require('socket.io').listen(server),
       bodyParser    = require('body-parser'),
       mongoose      = require('mongoose'),
-      flash         = require('connect-flash');
+      flash         = require('connect-flash'),
+      server        = require('http').createServer(app);
+
 
 const indexRoutes   = require('./routes/index.js');
 const gameRoutes    = require('./routes/game.js');
@@ -33,13 +33,11 @@ app.use(function(req, res, next){
 
 //Requiring routes
 app.use(indexRoutes);
-app.use('/game', gameRoutes)
+app.use('/game', gameRoutes);
 
 //TODO Database connection
 
 //TODO Setup express session
-
-
 
 
 //Listening on port

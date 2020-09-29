@@ -7,13 +7,22 @@ const ID_LENGTH = 5;
 
 var games = {};
 
-router.get('/', function(req, res){
-    res.render("general/landing");
-});
+router.get('/:id', function(req, res){
+    var id = req.params.id;
+    if(!games[id]){
+        req.flash('error', 'Game not found.');
+        return res.redirect('/');
+    }
+    //TODO check if this user is even in this lobby
 
-//Route to join or host games.
-router.post('/join', function(req, res){
+    
+    return res.render('game/lobby', {id: id});
+
+})
+
+router.post('/', function(req, res){
     var action = req.body.action;
+    console.log(req.body);
 
     if(req.body.name === null || req.body.name === ""){
         req.flash("error", "Please enter a name.");
@@ -24,15 +33,13 @@ router.post('/join', function(req, res){
     if(action === "join"){
         var id = req.body.code;
         var game = games[id];
-        console.log(game);
 
         if(!game){
-            console.log("Game not found.");
             req.flash('error', 'Game not found.');
             return res.redirect('/');
         }
         else{
-            return res.render('game/lobby', {id: id});
+            return res.redirect('/game/' + id);
         }
     }
 
@@ -49,7 +56,7 @@ router.post('/join', function(req, res){
         id = makeid(5);
         games[id] = new Game();
         req.flash('success', `Created game with id <b>${id}</b>.`);
-        return res.render('game/lobby', {id: id});
+        return res.redirect('/game/' + id);
     }
 
     //Error
@@ -76,5 +83,12 @@ function makeid(length) {
     }
     return result;
  }
+
+//  io.on('connection', (socket) => {
+//     console.log('a user connected');
+//     socket.on('disconnect', () => {
+//       console.log('user disconnected');
+//     });
+//   });
 
 module.exports = router;
