@@ -7,6 +7,7 @@ const express       = require("express"),
       flash         = require('connect-flash');
 
 const indexRoutes   = require('./routes/index.js');
+const gameRoutes    = require('./routes/game.js');
 
 require('dotenv').config({path: __dirname + '/.env'});
 
@@ -16,26 +17,29 @@ app.use(require('express-session')({
     saveUninitialized: false
 }));
 
-app.use(function(req, res, next){
-    // res.locals.currentUserJSON = JSON.stringify(req.user);
-    // res.locals.currentUser = req.user;
-    // res.locals.error = req.flash('error');
-    // res.locals.success = req.flash('success');
-    next();
-});
-
-//Requiring routes
-app.use(indexRoutes);
-
-//TODO Database connection
-
-//TODO Setup express session
-
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 app.use(flash());
+
+app.use(function(req, res, next){
+    // res.locals.currentUserJSON = JSON.stringify(req.user);
+    // res.locals.currentUser = req.user;
+    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
+    next();
+});
+
+//Requiring routes
+app.use(indexRoutes);
+app.use('/game', gameRoutes)
+
+//TODO Database connection
+
+//TODO Setup express session
+
+
 
 
 //Listening on port

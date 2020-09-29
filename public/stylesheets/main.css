@@ -13,6 +13,13 @@ body {
   color: white;
 }
 
+hr {
+  color: var(--prim);
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--prim), rgba(0, 0, 0, 0));
+}
+
 .color-prim {
   color: var(--prim);
 }
@@ -35,6 +42,10 @@ body {
 }
 .btn-form {
   margin-bottom: 10px;
+}
+
+.form-control-lg {
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=main.css.map */
