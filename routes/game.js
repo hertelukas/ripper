@@ -1,7 +1,10 @@
 const express       = require('express'),
       router        = express.Router();
 
-const MAX_GAMES = 10;
+
+
+module.exports = function(io, server){
+    const MAX_GAMES = 10;
 const MAX_PLAYER = 6;
 const ID_LENGTH = 5;
 
@@ -84,11 +87,17 @@ function makeid(length) {
     return result;
  }
 
-//  io.on('connection', (socket) => {
-//     console.log('a user connected');
-//     socket.on('disconnect', () => {
-//       console.log('user disconnected');
-//     });
-//   });
+ //Socket.io
+ io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
 
-module.exports = router;
+    socket.on('lobby message', (msg) =>{
+        io.emit('lobby message', msg);
+    })
+  });
+
+return router;
+};

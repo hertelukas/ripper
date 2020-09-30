@@ -3,11 +3,12 @@ const express       = require("express"),
       bodyParser    = require('body-parser'),
       mongoose      = require('mongoose'),
       flash         = require('connect-flash'),
-      server        = require('http').createServer(app);
+      server        = require('http').createServer(app),
+      io            = require('socket.io')(server);
 
 
 const indexRoutes   = require('./routes/index.js');
-const gameRoutes    = require('./routes/game.js');
+const gameRoutes    = require('./routes/game.js')(io, server);
 
 require('dotenv').config({path: __dirname + '/.env'});
 
