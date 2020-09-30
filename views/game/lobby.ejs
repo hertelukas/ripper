@@ -5,10 +5,13 @@
         <h1 class="display-1 color-prim"><%=id%></h1>
         <hr>
 
+        <ul id="messages"></ul>
+
+
         <div class="chat">
             <form class="form-inline" id="send">
                 <div class="form-group mx-sm-3 mb-2">
-                  <input type="text" class="form-control" id="Message" placeholder="Type a message">
+                  <input type="text" class="form-control" id="m" placeholder="Type a message">
                 </div>
                 <button type="submit" class="btn btn-outline-light mb-2">Send</button>
               </form>
@@ -16,18 +19,19 @@
     </div>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
+<!-- <script src="/socket.io/socket.io.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
-    var socket = io();
 
   $(function () {
-    $('#send').submit(function(e) {
-      e.preventDefault(); 
-      socket.emit('chat message', $('#m').val());
+    // var socket = io();
+    $('form').submit(function(e) {
+      e.preventDefault(); // prevents page reloading
+      // socket.emit('chat message', $('#m').val());
       $('#m').val('');
       return false;
     });
-  });
+  });;
 </script>
 
 
