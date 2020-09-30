@@ -22,8 +22,8 @@ router.get('/:id', function(req, res){
         req.flash('error', 'Please enter a username first.');
         return res.redirect('/');
     }
-    //TODO check if this user is even in this lobby
     
+    //TODO send player names in this lobby
     return res.render('game/lobby', {id: id});
 });
 
@@ -109,13 +109,14 @@ function makeid(length) {
     socket.on('new user', (user) => {
         socket.join(user.gameid);
         clients[socket.id] = user;
-        io.to(user.gameid).emit('connect message', user.username + ' connected.');
+        io.to(user.gameid).emit('connect message', {username: user.username, connected: true});
     });
 
     socket.on('disconnect', () => {
       var user = clients[socket.id];
       if(!user || user == undefined) return;
-      io.to(user.gameid).emit('connect message', user.username + ' disconnected.');
+      io.to(user.gameid).emit('connect message', {username: user.username, connected: false});
+      clients[socket.id] == null;
     });
 
     socket.on('lobby message', (msg) =>{

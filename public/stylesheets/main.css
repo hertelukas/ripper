@@ -59,8 +59,33 @@ hr {
   margin-bottom: 0.2rem;
 }
 
+.side-bar {
+  border-radius: 5px;
+  border: 1px solid var(--prim);
+  margin: 50px;
+  margin-top: 150px;
+  height: 80%;
+}
+
+.side-bar-content {
+  display: block;
+  margin: auto;
+  margin-top: 20px;
+}
+
 #messages {
-  list-style-type: none;
+  height: 400px;
+  width: 100%;
+  resize: vertical;
+}
+
+@media (min-width: 800px) {
+  #messages {
+    height: 550px;
+    width: 50%;
+    resize: vertical;
+    margin: auto;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

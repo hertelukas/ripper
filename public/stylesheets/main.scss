@@ -60,6 +60,20 @@ hr{
     margin-bottom: 0.2rem;
 }
 
+.side-bar{
+    border-radius: 5px;
+    border: 1px solid var(--prim);
+    margin: 50px;
+    margin-top: 150px;
+    height: 80%;
+}
+
+.side-bar-content{
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+}
+
 #messages{
     height: 400px;
     width: 100%;
