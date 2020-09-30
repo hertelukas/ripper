@@ -31,16 +31,20 @@ router.post('/', function(req, res){
         return res.redirect("/");
     }
 
+    req.session.username = req.body.name;
+
     //Join game
     if(action === "join"){
         var id = req.body.code;
         var game = games[id];
+        console.log(game);
 
         if(!game){
             req.flash('error', 'Game not found.');
             return res.redirect('/');
         }
         else{
+            req.session.gameid = id;
             return res.redirect('/game/' + id);
         }
     }
@@ -56,7 +60,8 @@ router.post('/', function(req, res){
         }
 
         id = makeid(5);
-        games[id] = new Game();
+        req.session.gameid = id;
+        games[id] = new Game(req.session._id);
         req.flash('success', `Created game with id <b>${id}</b>.`);
         return res.redirect('/game/' + id);
     }
@@ -71,7 +76,8 @@ router.post('/', function(req, res){
 
 
 //Constructors
-function Game(){
+function Game(hostId){
+    var players = [hostId];
 }
 
 
@@ -95,7 +101,7 @@ function makeid(length) {
 
     socket.on('lobby message', (msg) =>{
         io.emit('lobby message', msg);
-    })
+    });
   });
 
 return router;

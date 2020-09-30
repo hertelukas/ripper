@@ -4,18 +4,38 @@ const express       = require("express"),
       mongoose      = require('mongoose'),
       flash         = require('connect-flash'),
       server        = require('http').createServer(app),
-      io            = require('socket.io')(server);
+      io            = require('socket.io')(server),
+      session       = require('express-session'),
+      MongoStore    = require('connect-mongo')(session);
 
 
 const indexRoutes   = require('./routes/index.js');
 const gameRoutes    = require('./routes/game.js')(io);
 
+const db = process.env.DATABASE_URL || 'mongodb://localhost:27017/ripper';
+const dbOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+}
+const connection = mongoose.createConnection(db, dbOptions);
+
+const sessionStore = new MongoStore({
+    mongooseConnection: connection,
+    collection: 'sessions'
+});
+
 require('dotenv').config({path: __dirname + '/.env'});
 
-app.use(require('express-session')({
-    secret: process.env.SECRET || "Gzuz mir gehts gut jetzt",
+app.use(session({
+    secret: process.env.SECRET || "Change me!",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: true,
+    store: sessionStore,
+    cookie:{
+        maxAge: 1000 * 60 * 60 * 12 //12 hours
+    }
 }));
 
 app.set('view engine', 'ejs');
@@ -26,7 +46,7 @@ app.use(flash());
 
 app.use(function(req, res, next){
     // res.locals.currentUserJSON = JSON.stringify(req.user);
-    // res.locals.currentUser = req.user;
+    res.locals.currentUser = req.user;
     res.locals.error = req.flash('error');
     res.locals.success = req.flash('success');
     next();
@@ -37,9 +57,6 @@ app.use(indexRoutes);
 app.use('/game', gameRoutes);
 
 //TODO Database connection
-
-//TODO Setup express session
-
 
 //Listening on port
 var port = process.env.PORT || 3000;
