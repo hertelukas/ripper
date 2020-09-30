@@ -3,7 +3,7 @@ const express       = require('express'),
 
 
 
-module.exports = function(io, server){
+module.exports = function(io){
     const MAX_GAMES = 10;
 const MAX_PLAYER = 6;
 const ID_LENGTH = 5;
@@ -16,12 +16,11 @@ router.get('/:id', function(req, res){
         req.flash('error', 'Game not found.');
         return res.redirect('/');
     }
-    //TODO check if this user is even in this lobby
 
+    //TODO check if this user is even in this lobby
     
     return res.render('game/lobby', {id: id});
-
-})
+});
 
 router.post('/', function(req, res){
     var action = req.body.action;

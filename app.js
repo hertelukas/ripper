@@ -8,7 +8,7 @@ const express       = require("express"),
 
 
 const indexRoutes   = require('./routes/index.js');
-const gameRoutes    = require('./routes/game.js')(io, server);
+const gameRoutes    = require('./routes/game.js')(io);
 
 require('dotenv').config({path: __dirname + '/.env'});
 
