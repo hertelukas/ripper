@@ -19,3 +19,4 @@ To configure variables add a `.env` file.
 | MAX_GAMES  | `10`                       | The max number of games being played simultanously.                                                    |
 | MAX_PLAYER | `6`                        | Max players in one game. Be careful when changing this.  (This can result in a worse game experience.) |
 | ID_LENGTH  | `3`                        | The length of the id. If you host a lot of games, you may want to increase this number.                |
+| DATABASE_URL| `mongodb://localhost:27017/ripper` | The url to your mongodb database. Not required. |
