@@ -54,3 +54,23 @@ hr{
     bottom: 3%;
     left: 43%;
 }
+
+.chat-msg{
+    font-size: x-large;
+    margin-bottom: 0.2rem;
+}
+
+#messages{
+    height: 400px;
+    width: 100%;
+    resize: vertical;
+}
+
+@media(min-width: 800px){
+    #messages{
+        height: 550px;
+        width: 50%;
+        resize: vertical;
+        margin: auto;
+    }
+}

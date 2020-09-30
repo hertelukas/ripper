@@ -54,4 +54,13 @@ hr {
   left: 43%;
 }
 
+.chat-msg {
+  font-size: x-large;
+  margin-bottom: 0.2rem;
+}
+
+#messages {
+  list-style-type: none;
+}
+
 /*# sourceMappingURL=main.css.map */

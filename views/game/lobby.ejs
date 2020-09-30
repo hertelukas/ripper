@@ -7,7 +7,7 @@
 
         <hr>
 
-        <ul id="messages"></ul>
+        <div id="messages" class="overflow-auto"></div>
 
 
         <div class="chat">
@@ -27,18 +27,25 @@
 
   $(function () {
     var socket = io();
+    console.log('<%=currentSession.id%>');
+    socket.emit('new user', {id: '<%=currentSession.id%>', username: "<%=currentSession.username%>", gameid: "<%=currentSession.gameid%>"});
+
     //Sending messages
     $('form').submit(function(e) {
       e.preventDefault(); // prevents page reloading
-      var data = {msg: $('#m').val(), username: "<%=currentSession.username%>"};
+      var data = {msg: $('#m').val(), username: "<%=currentSession.username%>", gameid: "<%=currentSession.gameid%>"};
       socket.emit('lobby message', data);
       $('#m').val('');
       return false;
     });
 
     //Receiving messages
+    socket.on('connect message', function(text){
+      $('#messages').append($('<p class="chat-msg">').text(text));
+    });
+
     socket.on('lobby message', function(msg){
-      $('#messages').append($('<li>').text(msg.username + ": " + msg.msg));
+      $('#messages').append($('<p class="chat-msg">').text(msg.username + ": " + msg.msg));
     });
   });;
 </script>
