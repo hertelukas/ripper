@@ -45,8 +45,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(flash());
 
 app.use(function(req, res, next){
-    // res.locals.currentUserJSON = JSON.stringify(req.user);
-    res.locals.currentUser = req.user;
+    res.locals.currentSession = req.session;
     res.locals.error = req.flash('error');
     res.locals.success = req.flash('success');
     next();
