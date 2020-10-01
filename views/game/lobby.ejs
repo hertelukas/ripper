@@ -11,6 +11,9 @@
     <div class="text-center">
       <h1 class="display-1 color-prim"><%=id%></h1>
       <h4>Share this code with your friends</h4>
+      <% if(currentSession.admin){ %>
+        <h4>You are an admin.</h4>
+      <%} %>
   
       <hr>
   
@@ -41,8 +44,14 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
   var gameid = '<%=currentSession.gameid%>';
+  var players = '<%=players%>'.split(',');
+  players.pop();
 
+  //TODO players and playerids should always represent an array with the current players. Maybe make an array with player objects
 
+  players.forEach(player => {
+    $('#players').append($('<p class="side-bar-content" id="'+ player + '">').text(player));
+  });
 
   $(function () {
     var socket = io();
@@ -66,6 +75,9 @@
       else{
         $('#' + data.username).remove();
         $('#messages').append($('<p class="chat-msg">').text(data.username + " disconnected"));
+
+        //TODO handle admin 
+        //TODO remove player from players array
       }
     });
 
@@ -73,6 +85,7 @@
       $('#messages').append($('<p class="chat-msg">').text(msg.username + ": " + msg.msg));
     });
   });;
+
 </script>
 
 
