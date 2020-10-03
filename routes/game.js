@@ -24,8 +24,8 @@ router.get('/:id', function(req, res){
         return res.redirect('/');
     }
     
-    //TODO send player ids
-    return res.render('game/lobby', {id: id, players: games[id].players});
+    console.log(`This are the current players: ${JSON.stringify(games[id].players)}`);
+    return res.render('game/lobby', {id: id, players: JSON.stringify(games[id].players)});
 });
 
 router.post('/', function(req, res){
@@ -46,8 +46,8 @@ router.post('/', function(req, res){
             return res.redirect('/');
         }
         var game = games[id];
-        game.players.push(req.session.username);
-        game.playerIds.push(req.session.id)
+        var player = new Player(req.session.id, req.session.username, 'user');
+        game.players.push(player);
 
         
         if(game.players.length >= game.maxPlayers){
@@ -55,7 +55,6 @@ router.post('/', function(req, res){
             return res.redirect('/');
         }
         req.session.gameid = id;
-        req.session.admin = false;
         return res.redirect('/game/' + id);        
     }
 
@@ -69,8 +68,7 @@ router.post('/', function(req, res){
 
         id = makeid(5);
         req.session.gameid = id;
-        req.session.admin = true;
-        games[id] = new Game(req.session.id, req.session.username);
+        games[id] = new Game(req.session.id, req.session.username, 'admin');
         req.flash('success', `Created game with id <b>${id}</b>.`);
         return res.redirect('/game/' + id);
     }
@@ -83,18 +81,19 @@ router.post('/', function(req, res){
 
 });
 
- //TODO make player objects and not two items for playerids and player usernames. 
- //Because later we may add additional information to a user (role, alive, etc...)
-
 //Constructors
-function Game(hostId, hostName){
+function Game(hostId, hostName, role){
     this.admin = hostId;
     this.players = [];
-    this.playerIds = [];
-    this.players[0] = hostName;
-    this.playerIds[0] = hostId;
+    this.players[0] = new Player(hostId, hostName, role);
     this.maxPlayers = MAX_PLAYER;
     this.status = GAMESTATUS.LOBBY;
+}
+
+function Player(id, name, role){
+    this.id = id;
+    this.username = name;
+    this.role = role;
 }
 
 
@@ -109,6 +108,13 @@ function makeid(length) {
     return result;
  }
 
+ function containsUser(obj, list){
+     for (let i = 0; i < list.length; i++) {
+        if(list[i].username === obj.username) return true;
+     }
+     return false;
+ }
+
  var clients = {};
 
 
@@ -117,19 +123,24 @@ function makeid(length) {
     socket.on('new user', (user) => {
         socket.join(user.gameid);
         clients[socket.id] = user;
-        io.to(user.gameid).emit('connect message', {username: user.username, connected: true});
+        io.to(user.gameid).emit('connect message', {user: user, connected: true});
+
+        //If the user is not in the games players array, add him.
+        //This occurs when the player is reloading the page and does not fill out the form.
+        if(!containsUser(user, games[user.gameid].players)) games[user.gameid].players.push(user);
     });
 
     socket.on('disconnect', () => {
       var user = clients[socket.id];
       if(!user || user == undefined) return;
-      io.to(user.gameid).emit('connect message', {username: user.username, connected: false});
-      clients[socket.id] == null;
+      io.to(user.gameid).emit('connect message', {user: user, connected: false});
+
+      delete clients[socket.id];
 
       //Removing user from game object
       var game = games[user.gameid];
-      game.players.splice(game.players.indexOf(user.username), 1);
-      game.playerIds.splice(game.playerIds.indexOf(user.id), 1);
+
+      game.players = game.players.filter(el => el.id !== user.id);
     });
 
     socket.on('lobby message', (msg) =>{

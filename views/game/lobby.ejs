@@ -44,18 +44,24 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
   var gameid = '<%=currentSession.gameid%>';
-  var players = '<%=players%>'.split(',');
-  players.pop();
+  var playerid = '<%=currentSession.id%>';
+  var players = <%-players%>;
 
   //TODO players and playerids should always represent an array with the current players. Maybe make an array with player objects
+  //This has to be checked again. It should be correct, but maybe its not.
 
   players.forEach(player => {
-    $('#players').append($('<p class="side-bar-content" id="'+ player + '">').text(player));
+    $('#players').append($('<p class="side-bar-content" id="'+ player.id + '">').text(player.username));
   });
 
   $(function () {
     var socket = io();
     socket.emit('new user', {id: '<%=currentSession.id%>', username: "<%=currentSession.username%>", gameid: "<%=currentSession.gameid%>"});
+
+    //If player is not listed in the current players array, add him:
+    if($('#<%=currentSession.id%>').length == 0){
+      $('#players').append($('<p class="side-bar-content" id="<%=currentSession.id%>">').text("<%=currentSession.username%>"));
+    }
 
     //Sending messages
     $('form').submit(function(e) {
@@ -68,16 +74,19 @@
 
     //Receiving messages
     socket.on('connect message', function(data){
-      if(data.connected){
-        $('#players').append($('<p class="side-bar-content" id="'+ data.username + '">').text(data.username));
-        $('#messages').append($('<p class="chat-msg">').text(data.username + " connected"));
+      if(data.connected && data.user.id != playerid){
+        $('#players').append($('<p class="side-bar-content" id="'+ data.user.id + '">').text(data.user.username));
+        $('#messages').append($('<p class="chat-msg">').text(data.user.username + " connected"));
+        players.push(data.user);
+        console.log(`Connected players: ${JSON.stringify(players)}`);
       }
-      else{
-        $('#' + data.username).remove();
-        $('#messages').append($('<p class="chat-msg">').text(data.username + " disconnected"));
+      else if(!data.connected){
+        $('#' + data.user.id).remove();
+        $('#messages').append($('<p class="chat-msg">').text(data.user.username + " disconnected"));
+        players = players.filter(el => el.id !== data.user.id)
+        console.log(`Connected players after disconnect: ${JSON.stringify(players)}`);
 
         //TODO handle admin 
-        //TODO remove player from players array
       }
     });
 
