@@ -61,5 +61,4 @@ app.use('/game', gameRoutes);
 var port = process.env.PORT || 3000;
 server.listen(port, function(){
     console.log('Server has started on Port ' + port + ' in environment: ' + process.env.NODE_ENV);
-    
 });
